@@ -31,8 +31,8 @@ const LabelInputContainer = ({
   );
 };
 
-export default function Register() {
-  const { login, createAccount } = useAuthStore();
+export default function Login() {
+  const { login } = useAuthStore();
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState('');
 
@@ -40,12 +40,10 @@ export default function Register() {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    const firstname = formData.get('firstname');
-    const lastname = formData.get('lastname');
     const email = formData.get('email');
     const password = formData.get('password');
 
-    if (!firstname || !lastname || !email || !password) {
+    if (!email || !password) {
       setError(() => 'Please fill out all fields');
       return;
     }
@@ -53,19 +51,9 @@ export default function Register() {
     setIsLoading(() => true);
     setError(() => '');
 
-    const response = await createAccount(
-      `${firstname} ${lastname}`,
-      email.toString(),
-      password.toString()
-    );
-
-    if (response.error) {
-      setError(() => response.error!.message);
-    } else {
-      const loginResponse = await login(email.toString(), password.toString());
-      if (loginResponse.error) {
-        setError(() => loginResponse.error!.message);
-      }
+    const loginResponse = await login(email.toString(), password.toString());
+    if (loginResponse.error) {
+      setError(() => loginResponse.error!.message);
     }
 
     setIsLoading(() => false);
@@ -74,15 +62,15 @@ export default function Register() {
   return (
     <div className="mx-auto w-full max-w-md rounded-none border border-solid border-white/30 bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-        Welcome to Riverflow
+        Login to QueryHub
       </h2>
       <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-        Signup with riverflow if you you don&apos;t have an account.
-        <br /> If you already have an account,{' '}
-        <Link href="/login" className="text-orange-500 hover:underline">
-          login
+        Login to queryhub
+        <br /> If you don&apos;t have an account,{' '}
+        <Link href="/register" className="text-orange-500 hover:underline">
+          register
         </Link>{' '}
-        to riverflow
+        with queryhub
       </p>
 
       {error && (
@@ -91,35 +79,13 @@ export default function Register() {
         </p>
       )}
       <form className="my-8" onSubmit={handleSubmit}>
-        <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
-          <LabelInputContainer>
-            <Label htmlFor="firstname">First name</Label>
-            <Input
-              className="text-black"
-              id="firstname"
-              name="firstname"
-              placeholder="Tyler"
-              type="text"
-            />
-          </LabelInputContainer>
-          <LabelInputContainer>
-            <Label htmlFor="lastname">Last name</Label>
-            <Input
-              className="text-black"
-              id="lastname"
-              name="lastname"
-              placeholder="Durden"
-              type="text"
-            />
-          </LabelInputContainer>
-        </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
           <Input
             className="text-black"
             id="email"
             name="email"
-            placeholder="projectmayhem@fc.com"
+            placeholder="james@gmail.com"
             type="email"
           />
         </LabelInputContainer>
@@ -139,7 +105,7 @@ export default function Register() {
           type="submit"
           disabled={isLoading}
         >
-          Sign up &rarr;
+          Log in &rarr;
           <BottomGradient />
         </button>
 
